@@ -147,16 +147,26 @@ function player2Move(marbles, row, updatedGameBoard){
                       updatedGameBoard.p1Row[4],
                       updatedGameBoard.p1Row[5]
   ]
+  let rightRow;
+  switch(row){
+  case 1: rightRow = 5; break;
+  case 2: rightRow = 4; break;
+  case 3: rightRow = 3; break;
+  case 4: rightRow = 2; break;
+  case 5: rightRow = 1; break;
+  case 6: rightRow = 0; break;
+  }
 
     console.log("baseArray", baseArray)
+      baseArray[rightRow] = 0
+    
     for (var i = 0; i < marbles; i++) {
-      console.log("baseArray[row - 1]", baseArray[row - 1], "row", row)
-      baseArray[row - 1] = 0
-      if((row + i) >= baseArray.length){
-        let arrayIndex = row + i - baseArray.length
+      //console.log("baseArray[row - 1]", baseArray[row - 1], "row", row)
+      if((rightRow + i + 1) >= baseArray.length){
+        let arrayIndex = rightRow + i - baseArray.length
         baseArray[arrayIndex] ++
       } else {
-        baseArray[row + i] ++
+        baseArray[rightRow + i + 1] ++
       }
     }
 
