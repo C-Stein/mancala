@@ -61,57 +61,40 @@ let onClick = (e) =>{
   const col = e.target.cellIndex
   const row = e.target.closest('tr').rowIndex
   let board;
+  let marbles;
   if (col === 0 || col === 7){
     console.log("you clicked the pit")
   } else {
     console.log(`you clicked ${row}, ${col}`)
     console.log(`gameBoard`, gameBoard)
     if(gameBoard.player1Turn && row === 1){
-      let marbles = gameBoard.p1Row[col-1]
+      marbles = gameBoard.p1Row[col-1]
       //console.log(`There are ${marbles} marbles`)
-      board = loopWay(marbles, col, gameBoard)
+      board = player1Move(marbles, col, gameBoard)
       //console.log("board", board)
+      drawBoard(board)
+    } else if (!gameBoard.player1Turn && row === 0){
+      switch(col){
+        case 1: marbles = gameBoard.p2Row[5]; break;
+        case 2: marbles = gameBoard.p2Row[4]; break;
+        case 3: marbles = gameBoard.p2Row[3]; break;
+        case 4: marbles = gameBoard.p2Row[2]; break;
+        case 5: marbles = gameBoard.p2Row[1]; break;
+        case 6: marbles = gameBoard.p2Row[0]; break;
+      }
+      //console.log("column", column)
+      //marbles = gameBoard.p2Row[column - 1]
+      console.log(`There are ${marbles} marbles`)
+      board = player2Move(marbles, col, gameBoard)
+      drawBoard(board)
     }
-    drawBoard(board)
   }
 
 }
 
-// let makeMove = (row, col) => {
-//   let  marbles;
-//   let updatedGameBoard = gameBoard;
-//   if(gameBoard.player1Turn && row === 1){
-//     marbles = gameBoard.p1Row[col-1]
-//     console.log(`There are ${marbles} marbles`)
-//   }
-//   switch (marbles) {
-//     case 0: 
-//       //do this
-//       console.log(0)
-//       break;
-//     case 1:
-//       console.log(1)
-//       //do this
-//       break;
-//     case 4:
-//       console.log(4)
-//       if(col === 1){
-//         console.log("col 1")
-//         updatedGameBoard.player1Turn= false, //come back to this
-//         updatedGameBoard.p1Row[0] = 0
-//         updatedGameBoard.p1Row[1] = gameBoard.p1Row[1] + 1
-//         updatedGameBoard.p1Row[2] = gameBoard.p1Row[2] + 1
-//         updatedGameBoard.p1Row[3] = gameBoard.p1Row[3] + 1
-//         updatedGameBoard.p1Row[4] = gameBoard.p1Row[4] + 1
-//       }
-//       break;
-//   }
-//   console.log(`updatedGameBoard.p1Row ${updatedGameBoard.p1Row}`)
-//   return updatedGameBoard
-// }
 /////////////////////////////////////////////////////////////////////
 
-function loopWay(marbles, row, updatedGameBoard){
+function player1Move(marbles, row, updatedGameBoard){
   let baseArray = [   updatedGameBoard.p1Row[0], 
                       updatedGameBoard.p1Row[1],
                       updatedGameBoard.p1Row[2],
@@ -142,6 +125,45 @@ function loopWay(marbles, row, updatedGameBoard){
     updatedGameBoard.p1Row = baseArray.slice(0, 6)
     updatedGameBoard.p1Pit = baseArray[6]
     updatedGameBoard.p2Row = baseArray.slice(7, 13)
+    updatedGameBoard.player1Turn= false;
+
+    console.log("baseArray", baseArray)
+    return updatedGameBoard
+  }
+
+function player2Move(marbles, row, updatedGameBoard){
+  let baseArray = [   
+                      updatedGameBoard.p2Row[0],
+                      updatedGameBoard.p2Row[1],
+                      updatedGameBoard.p2Row[2],
+                      updatedGameBoard.p2Row[3],
+                      updatedGameBoard.p2Row[4],
+                      updatedGameBoard.p2Row[5],
+                      updatedGameBoard.p2Pit,
+                      updatedGameBoard.p1Row[0], 
+                      updatedGameBoard.p1Row[1],
+                      updatedGameBoard.p1Row[2],
+                      updatedGameBoard.p1Row[3],
+                      updatedGameBoard.p1Row[4],
+                      updatedGameBoard.p1Row[5]
+  ]
+
+    console.log("baseArray", baseArray)
+    for (var i = 0; i < marbles; i++) {
+      console.log("baseArray[row - 1]", baseArray[row - 1], "row", row)
+      baseArray[row - 1] = 0
+      if((row + i) >= baseArray.length){
+        let arrayIndex = row + i - baseArray.length
+        baseArray[arrayIndex] ++
+      } else {
+        baseArray[row + i] ++
+      }
+    }
+
+    updatedGameBoard.p2Row = baseArray.slice(0, 6)
+    updatedGameBoard.p2Pit = baseArray[6]
+    updatedGameBoard.p1Row = baseArray.slice(7, 13)
+    updatedGameBoard.player1Turn= true;
 
     console.log("baseArray", baseArray)
     return updatedGameBoard
