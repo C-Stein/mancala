@@ -1,0 +1,20 @@
+{
+  "name": "client",
+  "authors": [
+    "Caitlin Stein <caitlin.teter@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "socket.io-client": "^1.7.2"
+  }
+}
