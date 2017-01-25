@@ -51,13 +51,13 @@ io.on('connect', socket => {
       console.error(err)
     })
    socket.on('make move', ({ row, col }) => {
-     socket.game.board = {
-                  player1Turn: true,
-                  p1Pit: 99,
-                  p2Pit: 99,
-                  p1Row: [4,4,4,4,4,4],
-                  p2Row: [4,4,4,4,4,4]
-                }
+      if(socket.game.board.player1Turn && row === 1){
+        let marbles = socket.game.board.p1Row[col-1]
+        //console.log(`There are ${marbles} marbles`)
+        socket.game.board = player1Move(marbles, col, socket.game.board)
+        //console.log("board", board)
+      }
+       
      socket.game.markModified('board') // trigger mongoose change detection
      socket.game.save().then(g => socket.emit('move made', g))
    })
@@ -65,7 +65,40 @@ io.on('connect', socket => {
   socket.on('something', (msg) => { console.log("here is", msg)})
 })
 
+function player1Move(marbles, row, updatedGameBoard){
+  let baseArray = [   updatedGameBoard.p1Row[0], 
+                      updatedGameBoard.p1Row[1],
+                      updatedGameBoard.p1Row[2],
+                      updatedGameBoard.p1Row[3],
+                      updatedGameBoard.p1Row[4],
+                      updatedGameBoard.p1Row[5],
+                      updatedGameBoard.p1Pit,
+                      updatedGameBoard.p2Row[0],
+                      updatedGameBoard.p2Row[1],
+                      updatedGameBoard.p2Row[2],
+                      updatedGameBoard.p2Row[3],
+                      updatedGameBoard.p2Row[4],
+                      updatedGameBoard.p2Row[5]
+  ]
 
+    console.log("baseArray", baseArray)
+    for (var i = 0; i < marbles; i++) {
+      baseArray[row - 1] = 0
+      if((row + i) >= baseArray.length){
+        let arrayIndex = row + i - baseArray.length
+        baseArray[arrayIndex] ++
+      } else {
+        baseArray[row + i] ++
+      }
+    }
+
+    updatedGameBoard.p1Row = baseArray.slice(0, 6)
+    updatedGameBoard.p1Pit = baseArray[6]
+    updatedGameBoard.p2Row = baseArray.slice(7, 13)
+    updatedGameBoard.player1Turn= false;
+
+    return updatedGameBoard
+  }
 
 
 

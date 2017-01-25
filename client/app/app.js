@@ -70,15 +70,15 @@ let onClick = (e) =>{
   if (col === 0 || col === 7){
     console.log("you clicked the pit")
   } else {
-    console.log(`you clicked ${row}, ${col}`)
-    console.log(`gameBoard`, gameBoard)
+    //console.log(`you clicked ${row}, ${col}`)
+    //console.log(`gameBoard`, gameBoard)
     socket.emit('make move', { row, col })/////////////////socket/////////
     if(gameBoard.player1Turn && row === 1){
-      marbles = gameBoard.p1Row[col-1]
-      //console.log(`There are ${marbles} marbles`)
-      board = player1Move(marbles, col, gameBoard)
-      //console.log("board", board)
-      drawBoard(board)
+      // marbles = gameBoard.p1Row[col-1]
+      // //console.log(`There are ${marbles} marbles`)
+      // board = player1Move(marbles, col, gameBoard)
+      // //console.log("board", board)
+      // drawBoard(board)
     } else if (!gameBoard.player1Turn && row === 0){
       switch(col){
         case 1: marbles = gameBoard.p2Row[5]; break;
