@@ -15,6 +15,7 @@ socket.on('disconnect', () => console.log('Socket disconnected'))
 
 socket.on('error', console.error)
 socket.on('new game', game => drawBoard(game.board))
+socket.on('move made', game => drawBoard(game.board))
 
 
 let gameBoard = {
@@ -71,6 +72,7 @@ let onClick = (e) =>{
   } else {
     console.log(`you clicked ${row}, ${col}`)
     console.log(`gameBoard`, gameBoard)
+    socket.emit('make move', { row, col })/////////////////socket/////////
     if(gameBoard.player1Turn && row === 1){
       marbles = gameBoard.p1Row[col-1]
       //console.log(`There are ${marbles} marbles`)

@@ -50,23 +50,22 @@ io.on('connect', socket => {
       socket.emit('error', err)
       console.error(err)
     })
+   socket.on('make move', ({ row, col }) => {
+     socket.game.board = {
+                  player1Turn: true,
+                  p1Pit: 99,
+                  p2Pit: 99,
+                  p1Row: [4,4,4,4,4,4],
+                  p2Row: [4,4,4,4,4,4]
+                }
+     socket.game.markModified('board') // trigger mongoose change detection
+     socket.game.save().then(g => socket.emit('move made', g))
+   })
   socket.on('disconnect', () => console.log(`Socket disconnected: ${socket.id}`))
   socket.on('something', (msg) => { console.log("here is", msg)})
 })
 
 
- // io.on('connect', socket => {
- //   Game.create({
- //     board: [['','',''],['','',''],['','','']]
- //   })
- //   .then(g => {
- //     socket.game = g
- //     socket.emit('new game', g)
- //   })
- //   .catch(err => {
- //     socket.emit('error', err)
- //     console.error(err)
- //   })
 
 
 
