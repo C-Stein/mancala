@@ -19,16 +19,54 @@ mongoose.connect(MONGODB_URL, () => {
   server.listen(PORT, () => console.log(`Server listening on port: ${PORT}`))
 })
 
-io.on('connect', socket => {
-  console.log(`Socket connected: ${socket.id}`)
-  socket.on('disconnect', () => console.log(`Socket disconnected: ${socket.id}`))
-  socket.on('something', (msg) => {
-    console.log("here is", msg)
-  })
+const Game = mongoose.model('game', {
+  board: {
+    player1Turn: Boolean,
+    p1Pit: Number,
+    p2Pit: Number,
+    p1Row: [Number,Number,Number,Number,Number,Number],
+    p2Row: [Number,Number,Number,Number,Number,Number]
+  }
 })
 
 
 
+io.on('connect', socket => {
+  console.log(`Socket connected: ${socket.id}`)
+  Game.create({
+                board : {
+                  player1Turn: true,
+                  p1Pit: 0,
+                  p2Pit: 0,
+                  p1Row: [4,4,4,4,4,4],
+                  p2Row: [4,4,4,4,4,4]
+                }
+  })
+    .then(g =>{
+      socket.game = g
+      socket.emit('new game', g)
+    })
+    .catch(err => {
+      socket.emit('error', err)
+      console.error(err)
+    })
+  socket.on('disconnect', () => console.log(`Socket disconnected: ${socket.id}`))
+  socket.on('something', (msg) => { console.log("here is", msg)})
+})
+
+
+ // io.on('connect', socket => {
+ //   Game.create({
+ //     board: [['','',''],['','',''],['','','']]
+ //   })
+ //   .then(g => {
+ //     socket.game = g
+ //     socket.emit('new game', g)
+ //   })
+ //   .catch(err => {
+ //     socket.emit('error', err)
+ //     console.error(err)
+ //   })
 
 
 

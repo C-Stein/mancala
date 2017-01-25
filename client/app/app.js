@@ -13,6 +13,10 @@ document.getElementById('button').addEventListener('click', () => {
 socket.on('connect', () => console.log(`Socket connected: ${socket.id}`))
 socket.on('disconnect', () => console.log('Socket disconnected'))
 
+socket.on('error', console.error)
+socket.on('new game', game => drawBoard(game.board))
+
+
 let gameBoard = {
   player1Turn: true,
   p1Pit: 0,
@@ -53,7 +57,7 @@ const table= document.querySelector('table')
   })
 }
 
-drawBoard(gameBoard)
+//drawBoard(gameBoard)
 
 
 
@@ -112,7 +116,6 @@ function player1Move(marbles, row, updatedGameBoard){
 
     console.log("baseArray", baseArray)
     for (var i = 0; i < marbles; i++) {
-      console.log("baseArray[row - 1]", baseArray[row - 1])
       baseArray[row - 1] = 0
       if((row + i) >= baseArray.length){
         let arrayIndex = row + i - baseArray.length
@@ -127,7 +130,6 @@ function player1Move(marbles, row, updatedGameBoard){
     updatedGameBoard.p2Row = baseArray.slice(7, 13)
     updatedGameBoard.player1Turn= false;
 
-    console.log("baseArray", baseArray)
     return updatedGameBoard
   }
 
@@ -161,7 +163,6 @@ function player2Move(marbles, row, updatedGameBoard){
       baseArray[rightRow] = 0
     
     for (var i = 0; i < marbles; i++) {
-      //console.log("baseArray[row - 1]", baseArray[row - 1], "row", row)
       if((rightRow + i + 1) >= baseArray.length){
         let arrayIndex = rightRow + i - baseArray.length
         baseArray[arrayIndex] ++
@@ -175,7 +176,6 @@ function player2Move(marbles, row, updatedGameBoard){
     updatedGameBoard.p1Row = baseArray.slice(7, 13)
     updatedGameBoard.player1Turn= true;
 
-    console.log("baseArray", baseArray)
     return updatedGameBoard
   }
 
