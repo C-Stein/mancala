@@ -89,7 +89,6 @@ function player1Move(marbles, row, updatedGameBoard){
                       updatedGameBoard.p2Row[5]
   ]
 
-    console.log("baseArray", baseArray)
     for (var i = 0; i < marbles; i++) {
       baseArray[row - 1] = 0
       if((row + i) >= baseArray.length){
@@ -134,7 +133,6 @@ function player2Move(marbles, row, updatedGameBoard){
   case 6: rightRow = 0; break;
   }
 
-    console.log("baseArray", baseArray)
       baseArray[rightRow] = 0
     
     for (var i = 0; i < marbles; i++) {
